@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Authority-Constrained Peer Review</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --fg: #e8eef4;
+      --muted: #8b9aab;
+      --accent: #5b8def;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% -20%, #1a2a44 0%, transparent 55%),
+        var(--bg);
+      color: var(--fg);
+      text-align: center;
+      padding: 2rem;
+    }
+
+    main {
+      max-width: 28rem;
+    }
+
+    h1 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-bottom: 1.25rem;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.15); }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <span class="dot" aria-hidden="true"></span>
+    <h1>Under Construction</h1>
+    <p>This project page is being built. Please check back soon.</p>
+  </main>
+</body>
+</html>
