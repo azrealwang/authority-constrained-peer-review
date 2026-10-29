@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://azrealwang.github.io/authority-constrained-peer-review/sitemap.xml
