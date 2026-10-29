@@ -66,46 +66,70 @@
     });
   });
 
-  // Third-party comments are requested only after an explicit visitor click.
-  const g = config.giscus || {};
-  const loader = document.getElementById('discussion-loader');
-  const commentButton = document.getElementById('load-comments');
-  const commentStatus = document.getElementById('comment-status');
-  if (loader && g.enabled && g.repoId && g.categoryId) {
-    loader.hidden = false;
-    let state = 'idle';
-    commentButton.addEventListener('click', () => {
-      if (state === 'loading' || state === 'ready') return;
-      state = 'loading'; commentButton.disabled = true; commentButton.textContent = 'Loading comments…';
-      commentStatus.textContent = '';
-      const script = document.createElement('script');
-      const attrs = {
-        src: 'https://giscus.app/client.js',
-        'data-repo': repo, 'data-repo-id': g.repoId,
-        'data-category': g.category || 'General', 'data-category-id': g.categoryId,
-        'data-mapping': g.mapping || 'specific', 'data-term': g.term || 'Project discussion',
-        'data-strict': '1', 'data-reactions-enabled': '1', 'data-emit-metadata': '1',
-        'data-input-position': 'top', 'data-theme': g.theme || 'light', 'data-lang': 'en',
-        'data-loading': 'eager', crossorigin: 'anonymous'
-      };
-      for (const [key, value] of Object.entries(attrs)) script.setAttribute(key, value);
-      script.async = true;
-      const failed = () => {
-        state = 'failed'; commentButton.disabled = false; commentButton.textContent = 'Retry loading comments';
-        commentStatus.textContent = 'Comments could not be loaded. You can still discuss on GitHub or contact us by email.';
-      };
-      const timer = setTimeout(() => { if (state === 'loading') failed(); }, 18000);
-      script.onerror = () => { clearTimeout(timer); script.remove(); failed(); };
-      const onMessage = event => {
-        if (event.origin !== 'https://giscus.app' || !event.data || !event.data.giscus) return;
-        const iframe = document.querySelector('#comments iframe');
-        if (!iframe || event.source !== iframe.contentWindow) return;
-        clearTimeout(timer);
-        if (event.data.giscus.error) { failed(); return; }
-        state = 'ready'; commentButton.hidden = true; commentStatus.textContent = '';
-      };
-      window.addEventListener('message', onMessage);
-      document.getElementById('comments').replaceChildren(script);
+  // The Get involved page lists every discussion in the chosen category.
+  const list = document.getElementById('discussion-list');
+  if (list) {
+    const category = (config.giscus && config.giscus.category) || 'Website comments';
+    const slug = category.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    document.querySelectorAll('#discussion [data-discussions]').forEach(a => {
+      a.href = `https://github.com/${repo}/discussions/categories/${slug}`;
+    });
+    const status = list.querySelector('.discussion-status');
+    const excerpt = body => {
+      const text = String(body || '').replace(/[#>*_\[\]()`]/g, ' ').replace(/\s+/g, ' ').trim();
+      if (text.length <= 180) return text;
+      return `${text.slice(0, 177).replace(/\s+\S*$/, '')}…`;
+    };
+    fetch(`https://api.github.com/repos/${repo}/discussions?per_page=30`, {
+      headers: { Accept: 'application/vnd.github+json' }
+    }).then(response => {
+      if (!response.ok) throw new Error(String(response.status));
+      return response.json();
+    }).then(items => {
+      const posts = items
+        .filter(item => item.category && item.category.name === category && String(item.html_url || '').startsWith(`https://github.com/${repo}/`))
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      list.replaceChildren();
+      if (!posts.length) {
+        const empty = document.createElement('p');
+        empty.className = 'discussion-status';
+        empty.textContent = `No discussions in ${category} yet.`;
+        list.append(empty);
+        return;
+      }
+      posts.forEach(post => {
+        const article = document.createElement('article');
+        const time = document.createElement('time');
+        time.dateTime = post.created_at;
+        time.textContent = new Date(post.created_at).toLocaleDateString('en', { day: 'numeric', month: 'long', year: 'numeric' });
+        const body = document.createElement('div');
+        const heading = document.createElement('h3');
+        const link = document.createElement('a');
+        link.href = post.html_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.append(post.title, document.createTextNode(' '));
+        const arrow = document.createElement('span');
+        arrow.setAttribute('aria-hidden', 'true');
+        arrow.textContent = '↗';
+        link.append(arrow);
+        heading.append(link);
+        const meta = document.createElement('p');
+        const author = post.user && post.user.login ? post.user.login : 'GitHub';
+        const count = Number(post.comments) || 0;
+        meta.textContent = `${author} · ${count} ${count === 1 ? 'comment' : 'comments'}`;
+        body.append(heading, meta);
+        const preview = excerpt(post.body);
+        if (preview) {
+          const summary = document.createElement('p');
+          summary.textContent = preview;
+          body.append(summary);
+        }
+        article.append(time, body);
+        list.append(article);
+      });
+    }).catch(() => {
+      status.textContent = 'Discussions could not be loaded. You can still read and start them on GitHub.';
     });
   }
 })();

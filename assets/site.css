@@ -19,3 +19,13 @@
 @media(max-width:350px){.power-graph{height:210px}.power-node strong{font-size:11px}.power-node>span{font-size:8px}.node-author{width:72px}.node-chair{width:77px}.node-supervisor,.node-critic{width:113px}.power-legends{font-size:9px}.group-link{gap:12px;padding:15px}.official-logo{width:90px}.group-link h3{font-size:18px}.demo-steps button{font-size:8px}.mini-actor h3{font-size:10px}.mini-card .mini-rating{font-size:11px}.mini-card .mini-scrutiny{font-size:11px}.no-recommendation,.mini-source{font-size:9px}.contact-links>a{font-size:12px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 @media print{.header,.footer,.actions,.demo-controls,.demo-steps,.toast,.giscus,#discussion-loader{display:none!important}.container{width:100%}.section,.position-hero,.page-hero{padding-block:20px}.power-figure,.mini-card,.objective{break-inside:avoid}.agenda-nav{display:none}.agenda-layout{display:block}.scrutiny-row,.merge-arrows,.compact-decision,.split-arrows{visibility:visible!important;opacity:1!important}.compact-decision{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+.discussion-list{margin-top:8px}
+.discussion-list article{display:grid;grid-template-columns:150px minmax(0,1fr);gap:28px;padding-block:22px;border-top:1px solid #c5d2bc}
+.discussion-list article:last-child{border-bottom:1px solid #c5d2bc}
+.discussion-list time{font-size:12px;letter-spacing:.04em;color:#4e6857;padding-top:6px}
+.discussion-list h3{font-family:var(--serif);font-size:24px;line-height:1.3;letter-spacing:-.03em}
+.discussion-list h3 a:hover{color:#0d2b26}
+.discussion-list p{margin-top:8px;font-size:14px;line-height:1.7;color:var(--muted)}
+.discussion-status{margin-top:22px;font-size:14px;color:var(--muted)}
+@media(max-width:680px){.discussion-list article{grid-template-columns:1fr;gap:8px;padding-block:18px}.discussion-list h3{font-size:22px}}

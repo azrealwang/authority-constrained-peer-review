@@ -4,11 +4,8 @@ window.ACPR_CONFIG = {
   repository: 'azrealwang/authority-constrained-peer-review',
   giscus: {
     enabled: true,
-    repoId: 'R_kgDOUy-W9Q',       // Copy data-repo-id from https://giscus.app
-    category: 'Website comments',
-    categoryId: 'DIC_kwDOUy-W9c4DJ5OY',   // Copy data-category-id from https://giscus.app
-    mapping: 'specific',
-    term: 'Project discussion',
-    theme: 'light'
+    repoId: 'R_kgDOUy-W9Q',
+    category: 'Website comments', // Every discussion in this category is listed on the site.
+    categoryId: 'DIC_kwDOUy-W9c4DJ5OY'
   }
 };
